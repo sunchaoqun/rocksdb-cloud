@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rc-server-deployment
+  labels:
+    app: rc-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rc-server
+  template:
+    metadata:
+      labels:
+        app: rc-server
+    spec:
+      containers:
+        - name: rc-server
+          image: 925352035051.dkr.ecr.ap-southeast-1.amazonaws.com/rc-server:latest
+          env:
+            - name: V
+              value: "1"
+            - name: USER
+              value: ${USER}
+            - name: USE_AWS
+              value: "1"
+            - name: USE_KAFKA
+              value: "1"
+            - name: AWS_ACCESS_KEY_ID
+              value: ${AWS_ACCESS_KEY_ID}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: ${AWS_SECRET_ACCESS_KEY}
+          ports:
+            - containerPort: 18080
