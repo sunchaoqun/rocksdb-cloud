@@ -17,6 +17,13 @@ export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
 ```
 cd ~/rocksdb-cloud
 export SRC_ROOT=$(git rev-parse --show-toplevel)
+
+docker run -it -v $SRC_ROOT:/opt/rocksdb-cloud/src -w /opt/rocksdb-cloud/src \
+     -e V=1 -e USER -e USE_AWS=1 -e USE_KAFKA=1 \
+     -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY \
+     --rm rocksdb-cloud-rt:latest \
+     /bin/bash -c "CFLAGS='-Wno-unused-function -Wno-unused-variable' make -j4"
+
 docker run -it -v $SRC_ROOT:/opt/rocksdb-cloud/src -w /opt/rocksdb-cloud/src \
     -e V=1 -e USER -e USE_AWS=1 -e USE_KAFKA=1 \
     -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY \
@@ -38,6 +45,11 @@ docker run -it -p 18080:18080 \
     -e  AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY \
     rc-server
 ```
+
+terminate called after throwing an instance of 'std::logic_error'
+  what():  basic_string::_M_construct null not valid
+如果发现报错信息，请注意环境变量是否设置成功
+AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, USER
 
 ### 6，测试
 ```
